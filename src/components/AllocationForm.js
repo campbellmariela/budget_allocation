@@ -1,21 +1,23 @@
-//
+// Component to add or reduce allocations  
+// to the different departments
 import React, { useContext, useState } from 'react';
 import { AppContext } from '../context/AppContext';
 
 const AllocationForm = (props) => {
-    const { dispatch,remaining  } = useContext(AppContext);
-
+    const { dispatch, remaining, currency } = useContext(AppContext);
     const [name, setName] = useState('');
     const [cost, setCost] = useState('');
     const [action, setAction] = useState('');
 
+    // Error message if the value exceeds the remaining budget
     const submitEvent = () => {
         if(cost > remaining) {
-            alert("The value cannot exceed remaining funds  £"+remaining);
+            alert("The value cannot exceed remaining funds £"+remaining);
             setCost("");
             return;
         }
-
+        // Add or reduce allocation according 
+        // to selected option
         const expense = {
             name: name,
             cost: parseInt(cost),
@@ -58,12 +60,18 @@ const AllocationForm = (props) => {
                         <option defaultValue value="Add" name="Add">Add</option>
                         <option value="Reduce" name="Reduce">Reduce</option>
                     </select>
+                    {/* Currency prefix to the change allocation textbox */}
+                    <div className="input-group-prepend" style={{ marginLeft: '2rem' }}>
+                        <label className="input-group-text" htmlFor="cost">
+                            {currency}
+                        </label>
+                    </div>
                     <input
                         required='required'
-                        type='number'
+                        type='number'   // Validation to only number values
                         id='cost'
                         value={cost}
-                        style={{ marginLeft: '2rem' , size: 10}}
+                        style={{size: 10}}
                         onChange={(event) => setCost(event.target.value)}>
                     </input>
                     <button className="btn btn-primary" onClick={submitEvent} style={{ marginLeft: '2rem' }}>
